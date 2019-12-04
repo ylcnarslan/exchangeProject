@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+ <html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    
+<script>
+	function validationExchangeRateForm() {
+		if (document.forms["exchangeRateForm"]["source"].value == "")
+		{
+			alert("Fill required fields!");
+			return false;
+		}
+		else if (document.forms["exchangeRateForm"]["rate"].value == "NONE")
+		{
+			alert("Please select rate!");
+			return false;
+		}
+	}
+	
+	function validationConvertForm() {
+		if (document.forms["convertForm"]["amount"].value == "")
+		{
+			alert("Fill amount!");
+			return false;
+		}
+		else if (isNaN(document.forms["convertForm"]["amount"].value)) {
+			alert("Amount must be numeric!");
+			return false;
+		}
+		else if (document.forms["convertForm"]["source"].value == "NONE")
+		{
+			alert("Fill source currency!");
+			return false;
+		}
+		else if (document.forms["convertForm"]["target"].value == "NONE")
+		{
+			alert("Fill target currency!");
+			return false;
+		}
+		
+	}
+	
+</script>    
+
+<head>
+<title>OpenPayd Exchange Project</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<form action="#" th:action="@{/calculate}" th:object="${calculate}" name="exchangeRateForm" onsubmit="return validationExchangeRateForm()">
+
+	<table>
+		<tr>
+			<th><label for="source_input">Exchange Rate</label></th>
+		</tr>
+		<tr>
+		    <th><label for="source_input">Source:</label></th>
+		    <th><input name="source" id="source"></input></th>
+		    
+		    <th><label for="rate_input">Rate:</label></th>
+		    <th>
+	    		<select name="rate">
+					<option value="NONE">Select Rate</option>
+					<option  th:each="rate : ${rateList}" th:value="${rate.rate}" th:text="${rate.rate}"></option>
+				</select>
+		    </th>
+		    <th><label for="result_input">Result:</label></th>
+		    <th><p th:text="${resultExchange}" /></th>
+	    </tr>
+	    <tr>
+		    <th><input type="submit" value="Calculate" /></th>
+		 </tr>
+    </table>
+    
+</form>
+
+<form action="#" th:action="@{/convert}" th:object="${convert}" name="convertForm" onsubmit="return validationConvertForm()">
+
+	<table>
+		<tr>
+			<th><label for="source_input">Convert Currency</label></th>
+		</tr>
+		<tr>
+			<th><label for="amount_input">Amount:</label></th>
+		    <th><input name="amount" id="amount"></input></th>
+		    
+		    <th><label for="source_input">Source Currency:</label></th>
+		    <th>
+	    		<select name="source">
+					<option value="NONE">Select Currency</option>
+					<option  th:each="sourceCurrency : ${sourceCurrencyList}" th:value="${sourceCurrency.currency}" th:text="${sourceCurrency.currency}"></option>
+				</select>
+		    </th>
+		    
+		    <th><label for="target_input">Target Currency:</label></th>
+		    <th>
+	    		<select name="target">
+					<option value="NONE">Select Currency</option>
+					<option  th:each="targetCurrency : ${targetCurrencyList}" th:value="${targetCurrency.currency}" th:text="${targetCurrency.currency}"></option>
+				</select>
+		    </th>
+		    
+		    <th><label for="result_input">Result:</label></th>
+		    <th><p th:text="${resultConversion}" /></th>
+	    </tr>
+	    <tr>
+		    <th><input type="submit" value="Convert" /></th>
+		 </tr>
+    </table>
+    
+</form>
+
+</body>
+</html>
